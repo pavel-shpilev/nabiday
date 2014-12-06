@@ -1,0 +1,58 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="" type="text/css"></link> 
+    <style type="text/css">
+      .plus {
+        background-color: lightBlue;
+      }
+
+      .minus {
+        background-color: pink;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Hello</h1>
+    <script src="{% static "bower_components/jquery/dist/jquery.js" %}"></script>
+    <script src="{% static "bower_components/underscore/underscore.js" %}"></script>
+    <script src="{% static "bower_components/angular/angular.js" %}"></script>
+    <script src="{% static "bower_components/moment/moment.js" %}"></script>
+    <script src="{% static "lib/my.class.js" %}"></script>
+    <script src="{% static "js/app.js" %}"></script>
+
+    <div ng-app="nab">
+      {% verbatim %}
+      <div ng-controller="TransactionListController">
+        <ul>
+          <li ng-repeat="t in transactions" 
+            ng-class="{
+              plus: t.place.state === 'plus',
+              minus: t.place.state === 'minus'
+            }">
+            {{ t.date }} {{ t.description }}
+
+            <span ng-show="t.place.state === 'neutral'">
+              <button ng-click="plus(t)">[+]</button>
+              <button ng-click="minus(t)">[-]</button>
+            </span>
+            <span ng-show="t.place.state !== 'neutral'">
+              <button ng-click="neutral(t)">[x]</button>
+            </span>
+          </li>
+        </ul>
+      </div>
+      {% endverbatim %}
+    </div>
+
+    <script>
+    </script>
+  </body>
+</html>
+
+<script type="text/javascript" charset="utf-8">
+  
+</script>
+
