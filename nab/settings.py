@@ -27,6 +27,18 @@ TEMPLATE_DEBUG = True
 ALLOWED_HOSTS = []
 
 
+"""
+# Actually we're not using Jinja2 yet but we could.
+
+TEMPLATE_LOADERS = (
+    'django_jinja.loaders.FileSystemLoader',
+    'django_jinja.loaders.AppLoader',
+)
+
+DEFAULT_JINJA2_TEMPLATE_EXTENSION = '.jinja'
+"""
+
+
 # Application definition
 
 INSTALLED_APPS = (
@@ -36,6 +48,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_jinja',
     'nab_iday',
 )
 

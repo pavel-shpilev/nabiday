@@ -1,4 +1,8 @@
 from django.http import HttpResponse
+from django.template import RequestContext
+from django.shortcuts import render
+from django.http import JsonResponse
+
 
 from nab_iday.api import NabApi
 
@@ -42,6 +46,7 @@ def magic_mapper(desc):
         'Test nabdev.com.au': '',
     }.get(desc, desc)
 
+
 def transactions(request, acc_token):
     api = NabApi()
     auth_token = api.login()['tokens'][0]['value']
@@ -53,4 +58,23 @@ def transactions(request, acc_token):
             transaction['amount'])
     html += "</ul></body></html>"
 
-    return HttpResponse(html)
+    return render(request, "transactions.html", {}, context_instance=RequestContext(request))
+    #return HttpResponse(html)
+
+
+def transactions_json(request, acc_token):
+    api = NabApi()
+    auth_token = api.login()['tokens'][0]['value']
+
+    transactions = []
+    for transaction in api.transactions(auth_token, acc_token)['transactionsResponse']['transactions']:
+        transactions.append({
+            'date': transaction['date'],
+            'description': magic_mapper(transaction['description']),
+            'amount': transaction['amount']
+        })
+
+    return JsonResponse({
+        'transactions': transactions
+    })
+

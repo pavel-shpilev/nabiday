@@ -1,0 +1,17 @@
+{
+  "name": "static",
+  "version": "0.0.0",
+  "homepage": "https://github.com/pavel-shpilev/nabiday",
+  "authors": [
+    "Andrew Magee <amagee@gmail.com>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
