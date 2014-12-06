@@ -2,9 +2,9 @@ from django.http import HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render
 from django.http import JsonResponse
-
-
 from nab_iday.api import NabApi
+from nab_iday.models import Place
+import json
 
 
 def index(request):
@@ -62,9 +62,11 @@ def transactions_json(request, acc_token):
 
     transactions = []
     for transaction in api.transactions(auth_token, acc_token)['transactionsResponse']['transactions']:
+        description = magic_mapper(transaction['description'])
+        Place.objects.get_or_create(description=description)
         transactions.append({
             'date': transaction['date'],
-            'description': magic_mapper(transaction['description']),
+            'description': description,
             'amount': transaction['amount']
         })
 
@@ -72,3 +74,10 @@ def transactions_json(request, acc_token):
         'transactions': transactions
     })
 
+
+def set_place_state(request):
+    json_request = json.loads(request.body.decode('utf-8'))
+    place = Place.objects.get(description=json_request['description'])
+    place.state = json_request['state']
+    place.save()
+    return JsonResponse({'status': 'success'})

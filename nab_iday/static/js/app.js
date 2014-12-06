@@ -34,22 +34,32 @@ app.controller("TransactionListController", function($scope, $http) {
     });
   });
 
+  var setState = function(place, state) {
+    $http.post("/set-place-state", {
+      description: place.description,
+      state: state
+    }).success(function(data) {
+      console.log("yay", data);
+    });
+  };
+
+
   $scope.plus = function(transaction) {
     var place = transaction.place;
     place.state = "plus";
-    console.log("plussing", place);
+    setState(place, "plus");
   };
 
   $scope.minus = function(transaction) {
     var place = transaction.place;
     place.state = "minus";
-    console.log("minusing", place);
+    setState(place, "minus");
   };
 
   $scope.neutral = function(transaction) {
     var place = transaction.place;
     place.state = "neutral";
-    console.log("neutralling", place);
+    setState(place, "neutral");
   };
 });
 
