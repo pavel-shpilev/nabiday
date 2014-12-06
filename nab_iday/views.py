@@ -48,18 +48,12 @@ def magic_mapper(desc):
 
 
 def transactions(request, acc_token):
+    # Not exactly sure why this is needed in this view but whatevs (breaks
+    # if you take it out).
     api = NabApi()
     auth_token = api.login()['tokens'][0]['value']
 
-    html = "<html><body>Transactions:<ul>"
-    for transaction in api.transactions(auth_token, acc_token)['transactionsResponse']['transactions']:
-        html += '<li>{0} {1} {2}</li>'.format(
-            transaction['date'], magic_mapper(transaction['description']),
-            transaction['amount'])
-    html += "</ul></body></html>"
-
     return render(request, "transactions.html", {}, context_instance=RequestContext(request))
-    #return HttpResponse(html)
 
 
 def transactions_json(request, acc_token):
