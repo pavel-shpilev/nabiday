@@ -12,23 +12,20 @@ var Place = my.Class({
 
 
 app.controller("TransactionListController", function($scope, $http) {
-
-  var places = null;
+  $scope.transactions = null;
+  $scope.places = null;
 
   $http.get("/transactions/OXM3dm5yK0hxd3VNRnRLemVrb2MzakpMWEVOTHl6RXNYaExxNk9ET2dzTXRhRjBDVnU2RHhjNzlVY2M2OG1vRA==.json").success(function(data) {
     console.log(data);
     $scope.transactions = data.transactions;
-    places = [];
+
+    $scope.places = {};
+    data.places.forEach(function(d) {
+      $scope.places[d.description] = new Place(d);
+    });
+
     $scope.transactions.forEach(function(t) {
-      if (places[t.description] == null) {
-        var place = places[t.description] = new Place({
-          description: t.description,
-          state: 'neutral'
-        });
-      }
-      else {
-        var place = places[t.description];
-      }
+      var place = $scope.places[t.description];
       place.count++;
       t.place = place;
     });

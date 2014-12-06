@@ -16,3 +16,9 @@ class Place(models.Model):
         default='neutral'
     )
 
+    def to_json_object(self):
+        return {
+            'description': self.description,
+            'state': self.state,
+        }
+

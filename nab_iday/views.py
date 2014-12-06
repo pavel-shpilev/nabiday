@@ -61,9 +61,12 @@ def transactions_json(request, acc_token):
     auth_token = api.login()['tokens'][0]['value']
 
     transactions = []
+    places = set([])
+
     for transaction in api.transactions(auth_token, acc_token)['transactionsResponse']['transactions']:
         description = magic_mapper(transaction['description'])
-        Place.objects.get_or_create(description=description)
+        place, _ = Place.objects.get_or_create(description=description)
+        places.add(place)
         transactions.append({
             'date': transaction['date'],
             'description': description,
@@ -71,7 +74,8 @@ def transactions_json(request, acc_token):
         })
 
     return JsonResponse({
-        'transactions': transactions
+        'transactions': transactions,
+        'places': [p.to_json_object() for p in places],
     })
 
 
