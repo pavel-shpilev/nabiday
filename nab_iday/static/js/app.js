@@ -199,7 +199,7 @@ var drawGraph = function(options) {
   var xAxis = d3.svg.axis()
     .scale(xScale)
     .tickFormat(function(d) { return moment(d).format("MMM DD"); })
-    .ticks(6)
+    .ticks(5)
     .orient("bottom");
 
   var xAxisGroup = svgContainer.append("g")
