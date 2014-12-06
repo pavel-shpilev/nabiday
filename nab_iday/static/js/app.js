@@ -21,10 +21,10 @@ app.controller("TransactionListController", function($scope, $http) {
   };
 
 
-  var redrawGraph = function(runningTotal) {
-    $(".graph_container").empty();
+  var redrawCumulativeGraph = function(runningTotal) {
+    $(".cumulative_graph_container").empty();
     drawGraph({
-      element: $(".graph_container")[0],
+      element: $(".cumulative_graph_container")[0],
       data1: runningTotal.map(function(d) {
         return {
           x: moment(d.date),
@@ -32,6 +32,25 @@ app.controller("TransactionListController", function($scope, $http) {
         };
       })
     });
+  };
+
+  var redrawWeeklyGraph = function(weeklyTotal) {
+    $(".weekly_graph_container").empty();
+    drawGraph({
+      element: $(".weekly_graph_container")[0],
+      data1: weeklyTotal.map(function(d) {
+        return {
+          x: moment(d.date),
+          y: d.score
+        };
+      })
+    });
+  };
+
+
+  var redrawGraphs = function(data) {
+    redrawCumulativeGraph(data.runningTotal);
+    redrawWeeklyGraph(data.weeklyTotal);
   };
 
 
@@ -50,7 +69,7 @@ app.controller("TransactionListController", function($scope, $http) {
       t.place = place;
     });
 
-    redrawGraph(data.runningTotal);
+    redrawGraphs(data);
   });
 
   var saveStateToServer = function(place, state) {
@@ -68,7 +87,7 @@ app.controller("TransactionListController", function($scope, $http) {
     place.state = state;
     saveStateToServer(place, state);
     getTransactionData().success(function(data) {
-      redrawGraph(data.runningTotal);
+      redrawGraphs(data);
     });
   };
 
@@ -78,7 +97,7 @@ app.controller("TransactionListController", function($scope, $http) {
   };
 
   $scope.minus = function(transaction) {
-    setState(transaction, 'plus');
+    setState(transaction, 'minus');
   };
 
   $scope.neutral = function(transaction) {
@@ -161,7 +180,7 @@ var drawGraph = function(options) {
 
   var yScale = d3.scale.linear()
                  .domain([
-                   0,
+                   d3.min(options.data1, function(d) { return d.y; }),
                    d3.max(options.data1, function(d) { return d.y; }),
                  ])
                  .range([height - yPadding, yPadding]);

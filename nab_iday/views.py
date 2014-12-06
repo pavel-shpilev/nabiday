@@ -36,14 +36,14 @@ def magic_mapper_description(desc):
         '$10 6-Jan USav-Ult': 'Coles',
         'Another test': 'Gym',
         'Test': 'Subway',
-        '2c now test': '',
-        'Now 1c test': '',
+        '2c now test': 'Other thing 1',
+        'Now 1c test': 'Other thing 2',
         '$20 now Usav-Ultra': 'Vegie Shop',
-        '$15 now Usav-Ultra': '',
-        '$25 now Usav-Ultra': '',
-        '$.01 Usaver-Ultra': '',
-        '$3 Usaver to Ultra': '',
-        'Test nabdev.com.au': '',
+        '$15 now Usav-Ultra': 'Other thing 3',
+        '$25 now Usav-Ultra': 'Other thing 4',
+        '$.01 Usaver-Ultra': 'Other thing 5',
+        '$3 Usaver to Ultra': 'Other thing 6',
+        'Test nabdev.com.au': 'Other thing 7',
     }.get(desc, desc)
 
 
@@ -70,26 +70,58 @@ def transactions_json(request, acc_token):
     transactions = []
     places = set([])
 
-    last_score = 0
     running_total = []
+    last_score = 0
+
+    weekly_total = []
+    weekly_score = 0
+    week_start = None
+
+
+    date_format_str = "%Y-%m-%dT%H:%M:%SZ"
+    def parse_date(date_str):
+        from datetime import datetime
+        return datetime.strptime(date_str, date_format_str)
+
+    def serialise_date(date):
+        return date.strftime(date_format_str)
 
 
     for i, transaction in enumerate(sorted(ts, key=lambda t: t['date'])):
         description = magic_mapper_description(transaction['description'])
-        date = magic_mapper_date(transaction['date'], i)
+        current_date = magic_mapper_date(transaction['date'], i)
         place, _ = Place.objects.get_or_create(description=description)
         places.add(place)
 
+
         current_score = last_score + place.get_score()
-        if i == len(ts) - 1 or magic_mapper_date(ts[i + 1]['date'], i + 1) != date:
+        weekly_score = weekly_score + place.get_score()
+
+        if i < len(ts) - 1:
+            next_date = magic_mapper_date(ts[i + 1]['date'], i + 1)
+        else:
+            next_date = None
+
+        if i == len(ts) - 1 or next_date != current_date:
             running_total.append({
-                'date': date,
+                'date': serialise_date(current_date),
                 'score': current_score
             })
+
+        if i == 0:
+            week_start = current_date
+        elif i == len(ts) - 1 or (next_date - week_start).days > 7:
+            weekly_total.append({
+                'date': serialise_date(week_start),
+                'score': weekly_score
+            })
+            weekly_score = 0
+            week_start = current_date
+
         last_score = current_score
 
         transactions.append({
-            'date': date,
+            'date': current_date,
             'description': description,
             'amount': transaction['amount']
         })
@@ -98,6 +130,7 @@ def transactions_json(request, acc_token):
         'transactions': transactions,
         'places': [p.to_json_object() for p in places],
         'runningTotal': running_total,
+        'weeklyTotal': weekly_total,
     })
 
 
