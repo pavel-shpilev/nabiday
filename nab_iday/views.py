@@ -28,7 +28,7 @@ def accounts(request):
     return HttpResponse(html)
 
 
-def magic_mapper(desc):
+def magic_mapper_description(desc):
     return {
         'Mahadev': 'McDonalds',
         'LinkedAccount': 'Pharmacy',
@@ -47,6 +47,11 @@ def magic_mapper(desc):
     }.get(desc, desc)
 
 
+def magic_mapper_date(transaction, i):
+    from datetime import date, timedelta
+    return date(2014, 12, 16) + timedelta(days=i)
+
+
 def transactions(request, acc_token):
     # Not exactly sure why this is needed in this view but whatevs (breaks
     # if you take it out).
@@ -60,15 +65,31 @@ def transactions_json(request, acc_token):
     api = NabApi()
     auth_token = api.login()['tokens'][0]['value']
 
+    ts = api.transactions(auth_token, acc_token)['transactionsResponse']['transactions']
+
     transactions = []
     places = set([])
 
-    for transaction in api.transactions(auth_token, acc_token)['transactionsResponse']['transactions']:
-        description = magic_mapper(transaction['description'])
+    last_score = 0
+    running_total = []
+
+
+    for i, transaction in enumerate(sorted(ts, key=lambda t: t['date'])):
+        description = magic_mapper_description(transaction['description'])
+        date = magic_mapper_date(transaction['date'], i)
         place, _ = Place.objects.get_or_create(description=description)
         places.add(place)
+
+        current_score = last_score + place.get_score()
+        if i == len(ts) - 1 or magic_mapper_date(ts[i + 1]['date'], i + 1) != date:
+            running_total.append({
+                'date': date,
+                'score': current_score
+            })
+        last_score = current_score
+
         transactions.append({
-            'date': transaction['date'],
+            'date': date,
             'description': description,
             'amount': transaction['amount']
         })
@@ -76,6 +97,7 @@ def transactions_json(request, acc_token):
     return JsonResponse({
         'transactions': transactions,
         'places': [p.to_json_object() for p in places],
+        'runningTotal': running_total,
     })
 
 

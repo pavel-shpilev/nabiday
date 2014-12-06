@@ -16,6 +16,14 @@ class Place(models.Model):
         default='neutral'
     )
 
+    def get_score(self):
+        if self.state == 'plus':
+            return 1
+        elif self.state == 'minus':
+            return -1
+        else:
+            return 0
+
     def to_json_object(self):
         return {
             'description': self.description,
