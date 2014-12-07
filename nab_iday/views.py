@@ -77,8 +77,8 @@ def transactions_json(request, acc_token):
     weekly_score = 0
     week_start = None
 
-
     date_format_str = "%Y-%m-%dT%H:%M:%SZ"
+
     def parse_date(date_str):
         from datetime import datetime
         return datetime.strptime(date_str, date_format_str)

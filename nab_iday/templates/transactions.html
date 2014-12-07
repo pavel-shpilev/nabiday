@@ -28,7 +28,7 @@
 		</div>
 	
 		<div id="content">
-			<a name="content" class="pageTitle">Money tracker</a>
+			<a name="content" class="pageTitle">Health tracker</a>
 		
 			<div class="mb__explanatory-text">Managing your health made easy and rewarding. People say, Health is wealth, using the Health tracker, health will actually be wealth!<a href="http://www.nab.com.au/wps/wcm/connect/nab/Internet_Banking_Help/home/13/1" target="_blank" class="mb__explanatory_help"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></a></div>
 			
@@ -56,11 +56,11 @@
 					{{ t.date }} {{ t.description }}
 
 					<span ng-show="t.place.state === 'neutral'">
-					  <button ng-click="plus(t)">[+]</button>
-					  <button ng-click="minus(t)">[-]</button>
+					  <button ng-click="plus(t)">+</button>
+					  <button ng-click="minus(t)">-</button>
 					</span>
 					<span ng-show="t.place.state !== 'neutral'">
-					  <button ng-click="neutral(t)">[x]</button>
+					  <button ng-click="neutral(t)">x</button>
 					</span>
 				  </li>
 				</ul>
