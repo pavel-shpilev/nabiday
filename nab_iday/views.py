@@ -56,17 +56,17 @@ def transactions(request, acc_token):
     # Not exactly sure why this is needed in this view but whatevs (breaks
     # if you take it out).
     api = NabApi()
-#    auth_token = api.login()['tokens'][0]['value']
+    auth_token = api.login()['tokens'][0]['value']
 
     return render(request, "transactions.html", {}, context_instance=RequestContext(request))
 
 
 def transactions_json(request, acc_token):
     api = NabApi()
-#    auth_token = api.login()['tokens'][0]['value']
+    auth_token = api.login()['tokens'][0]['value']
 
-#    ts = api.transactions(auth_token, acc_token)['transactionsResponse']['transactions']
-    ts = [
+    ts = api.transactions(auth_token, acc_token)['transactionsResponse']['transactions']
+    """ts = [
         {'description': 'blah', 'date': '2001-12-06', 'amount': '10'},
         {'description': 'asdf', 'date': '2001-12-06', 'amount': '10'},
         {'description': 'blasdfaah', 'date': '2001-12-06', 'amount': '10'},
@@ -83,7 +83,7 @@ def transactions_json(request, acc_token):
         {'description': 'asdf', 'date': '2001-12-06', 'amount': '10'},
         {'description': 'blah', 'date': '2001-12-06', 'amount': '10'},
         {'description': 'blasdfaah', 'date': '2001-12-06', 'amount': '10'},
-    ]
+    ]"""
 
     transactions = []
 
