@@ -3,10 +3,11 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" href="" type="text/css"></link> 
+    <link rel="stylesheet" href="{% static "css/styles.css" %}" type="text/css"></link>
+	<link rel="stylesheet" href="{% static "css/nab_steals.css" %}" type="text/css"></link>
     <style type="text/css">
       .plus {
-        background-color: lightBlue;
+        background-color: #a9e9b1;
       }
 
       .minus {
@@ -15,52 +16,74 @@
     </style>
   </head>
   <body>
-    <h1>Hello</h1>
-    <script src="{% static "bower_components/jquery/dist/jquery.js" %}"></script>
-    <script src="{% static "bower_components/underscore/underscore.js" %}"></script>
-    <script src="{% static "bower_components/angular/angular.js" %}"></script>
-    <script src="{% static "bower_components/moment/moment.js" %}"></script>
-    <script src="{% static "bower_components/d3/d3.js" %}"></script>
-    <script src="{% static "lib/my.class.js" %}"></script>
-    <script src="{% static "js/app.js" %}"></script>
+  
+	<div id="header">
+		<div id="logo"</div>
+	</div>
+  
+	<div id="main_body">
+		<div class="spacer"></div>
+		<div id="side_menu">
+			testing
+		</div>
+	
+		<div id="content">
+			<a name="content" class="pageTitle">Money tracker</a>
+		
+			<div class="mb__explanatory-text">Managing your health made easy and rewarding. People say, Health is wealth, using the Health tracker, health will actually be wealth!<a href="http://www.nab.com.au/wps/wcm/connect/nab/Internet_Banking_Help/home/13/1" target="_blank" class="mb__explanatory_help"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></a></div>
+			
+			<div class="spacer"></div>
+			
+			<hr>
+			
+			<script src="{% static "bower_components/jquery/dist/jquery.js" %}"></script>
+			<script src="{% static "bower_components/underscore/underscore.js" %}"></script>
+			<script src="{% static "bower_components/angular/angular.js" %}"></script>
+			<script src="{% static "bower_components/moment/moment.js" %}"></script>
+			<script src="{% static "bower_components/d3/d3.js" %}"></script>
+			<script src="{% static "lib/my.class.js" %}"></script>
+			<script src="{% static "js/app.js" %}"></script>
 
-    <div ng-app="nab">
-      {% verbatim %}
-      <div ng-controller="TransactionListController">
-        <ul>
-          <li ng-repeat="t in transactions" 
-            ng-class="{
-              plus: t.place.state === 'plus',
-              minus: t.place.state === 'minus'
-            }">
-            {{ t.date }} {{ t.description }}
+			<div ng-app="nab">
+			  {% verbatim %}
+			  <div ng-controller="TransactionListController">
+				<ul>
+				  <li ng-repeat="t in transactions" 
+					ng-class="{
+					  plus: t.place.state === 'plus',
+					  minus: t.place.state === 'minus'
+					}">
+					{{ t.date }} {{ t.description }}
 
-            <span ng-show="t.place.state === 'neutral'">
-              <button ng-click="plus(t)">[+]</button>
-              <button ng-click="minus(t)">[-]</button>
-            </span>
-            <span ng-show="t.place.state !== 'neutral'">
-              <button ng-click="neutral(t)">[x]</button>
-            </span>
-          </li>
-        </ul>
+					<span ng-show="t.place.state === 'neutral'">
+					  <button ng-click="plus(t)">[+]</button>
+					  <button ng-click="minus(t)">[-]</button>
+					</span>
+					<span ng-show="t.place.state !== 'neutral'">
+					  <button ng-click="neutral(t)">[x]</button>
+					</span>
+				  </li>
+				</ul>
 
+				<div class="spacer"></div>
 
-        <h2>Total goodness</h2>
+				<h2 class="pageTitle">Total goodness</h2>
 
-        <div class="cumulative_graph_container" style="width: 800px; height: 300px;">
-        </div>
+				<div class="cumulative_graph_container" style="width: 980px; height: 150px;">
+				</div>
 
-        <h2>Weekly goodness</h2>
+				<h2 class="pageTitle">Weekly goodness</h2>
 
-        <div class="weekly_graph_container" style="width: 800px; height: 300px;">
-        </div>
-      </div>
-      {% endverbatim %}
-    </div>
+				<div class="weekly_graph_container" style="width: 980px; height: 150px;">
+				</div>
+			  </div>
+			  {% endverbatim %}
+			</div>
 
-    <script>
-    </script>
+			<script>
+			</script>
+		</div>
+	</div>
   </body>
 </html>
 

@@ -35,6 +35,7 @@ class NabApi(object):
         if r.status_code != 200:
             raise ApiError(r)
         response_ob = json.loads(r.content.decode("utf-8"))
+        response_ob = {}
 
         pprint.pprint(response_ob)
         print("\n\n\n")
